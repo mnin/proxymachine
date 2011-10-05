@@ -51,6 +51,18 @@ class ProxyMachine
     @@router
   end
 
+  def self.set_filter(block)
+    @@filter = block
+  end
+
+  def self.filter
+    if defined? @@filter
+      @@filter
+    else
+      Proc.new {|data| data}
+    end
+  end
+
   def self.graceful_shutdown(signal)
     EM.stop_server($server) if $server
     LOGGER.info "Received #{signal} signal. No longer accepting new connections."
@@ -117,6 +129,10 @@ end
 module Kernel
   def proxy(&block)
     ProxyMachine.set_router(block)
+  end
+
+  def proxyfilter(&block)
+    ProxyMachine.set_filter(block)
   end
 
   def proxy_connect_error(&block)

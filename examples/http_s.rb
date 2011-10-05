@@ -1,5 +1,5 @@
 proxy do |data|
-  # p data
+  p data
   if data =~ /^CONNECT (.+):([0-9]+)?(.*)\r\n/
     remote = "#{$1}:#{$2.to_i||443}"
     { :remote => remote,
@@ -12,3 +12,7 @@ proxy do |data|
     { :noop => true }
   end 
 end
+
+# proxyfilter do |data|
+#   data.gsub('abc', 'def')
+# end
